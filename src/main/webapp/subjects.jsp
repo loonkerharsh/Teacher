@@ -1,3 +1,4 @@
+<%@page import="com.mysql.cj.Session"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -39,6 +40,7 @@
         <h2 class="text-center my-4">Subjects for Semester ${semester}</h2>
         <div class="row">
             <%
+            	
                 List<String[]> subjects = (List<String[]>) request.getAttribute("subjectsList");
                 if (subjects.isEmpty()) {
             %>
@@ -64,6 +66,63 @@
             %>
         </div>
     </div>
+
+	<!-- Add Subject Button -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+  Add Subject
+</button>
+
+<!-- Add Subject Modal -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addSubjectModalLabel">Add New Subject</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="AddSubjectServlet" method="post">
+        <div class="modal-body">
+          <!-- Teacher ID (Hidden or Dropdown) -->
+          <input type="hidden" name="teacherId" value="<%=session.getAttribute("t_id")%>">
+
+          <div class="mb-3">
+            <label for="subjectName" class="form-label">Subject Name</label>
+            <input type="text" class="form-control" id="subjectName" name="subjectName" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+            <input type="text" class="form-control" id="semester" name="semester" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="totalStudents" class="form-label">Total Students</label>
+            <input type="number" class="form-control" id="totalStudents" name="totalStudents" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="classTime" class="form-label">Class Time</label>
+            <input type="text" class="form-control" id="classTime" name="classTime" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="completionNote" class="form-label">Completion Note</label>
+            <textarea class="form-control" id="completionNote" name="completionNote" rows="3"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="classroom" class="form-label">Classroom</label>
+            <input type="text" class="form-control" id="classroom" name="classroom" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
