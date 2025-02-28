@@ -16,64 +16,63 @@ public class Subjects extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection cn;
     private PreparedStatement psq;
-   
-    public void init(ServletConfig config) throws ServletException 
-    {
-        try 
-        {
+
+    public void init(ServletConfig config) throws ServletException {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmc","root","1234");
-            psq=cn.prepareStatement("select * from subjects where teacher_id=? and semester=?");
+            psq = cn.prepareStatement("SELECT * FROM subjects WHERE teacher_id=? AND semester=?");
         }
-        catch(ClassNotFoundException e) {
-            System.out.println("driver can't load");
+        catch (ClassNotFoundException e) {
+            System.out.println("Driver can't load");
         }
-        catch(SQLException e) {
-            System.out.println("Sql Alert");
+        catch (SQLException e) {
+            System.out.println("SQL Alert: " + e.getMessage());
         }
-    }   
-    
+    }
+
     public Subjects() {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession ssn = request.getSession();
-        if (ssn.getAttribute("t_id") == null) 
-        {
+        if (ssn.getAttribute("t_id") == null) {
             response.sendRedirect("login.jsp");
             return;
         }
-        int t_id = Integer.parseInt(request.getParameter("t_id"));
+        
+        int t_id = (int) ssn.getAttribute("t_id");  // Get t_id from Session
         int sem = Integer.parseInt(request.getParameter("sem"));
         
+        System.out.println("Teacher ID: " + t_id);
+        System.out.println("Semester: " + sem);
+
         List<String[]> subjects = new ArrayList<>();
         
-        try
-        {
+        try {
             psq.setInt(1, t_id);
             psq.setInt(2, sem);
             ResultSet rs = psq.executeQuery();
             
-            while(rs.next())
-            {
-                String[] subject = new String[5];
-                subject[0] = rs.getString(3);  // Subject Name
-                subject[1] = rs.getString(7);  // Completion Note
-                subject[2] = rs.getString(8);  // Classroom
-                subject[3] = rs.getString(6);  // Timing
-                subject[4] = String.valueOf(rs.getInt(5)); // Total Students
+            while (rs.next()) {
+                String[] subject = new String[6];
+                subject[0] = rs.getString("subject_name");  // Subject Name
+                subject[1] = rs.getString("completion_note");  // Completion Note
+                subject[2] = rs.getString("classroom");  // Classroom
+                subject[3] = rs.getString("class_time");  // Timing
+                subject[4] = String.valueOf(rs.getInt("total_students"));  // Total Students
+                subject[5] = String.valueOf(rs.getInt("id"));
                 subjects.add(subject);
             }
-        }
-        catch(SQLException e)
-        {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
         
+        // Set Attributes and Forward
         request.setAttribute("subjectsList", subjects);
-        request.setAttribute("semester", sem);
+        request.setAttribute("semester", sem);  // Send Semester Information
         request.getRequestDispatcher("subjects.jsp").forward(request, response);
     }
 }

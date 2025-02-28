@@ -64,4 +64,24 @@
     <servlet-name>AddSubjectServlet</servlet-name>
     <url-pattern>/AddSubjectServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditSubjectServlet</display-name>
+    <servlet-name>EditSubjectServlet</servlet-name>
+    <servlet-class>mypkg.EditSubjectServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditSubjectServlet</servlet-name>
+    <url-pattern>/EditSubjectServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>DeleteSubjectServlet</display-name>
+    <servlet-name>DeleteSubjectServlet</servlet-name>
+    <servlet-class>mypkg.DeleteSubjectServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteSubjectServlet</servlet-name>
+    <url-pattern>/DeleteSubjectServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
